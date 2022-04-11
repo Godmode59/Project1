@@ -1,8 +1,7 @@
 #pragma once
-#include <iostream>
-#include <Windows.h>
 #include <chrono>
 #include <thread>
+#include "MConsolUtil.hpp"
 
 using namespace std;
 
@@ -10,20 +9,18 @@ namespace MuSeoun_Engine
 {
 	class MGameLoop
 	{
-	private: 
+	private:
 		bool _isGameRunning;
-	public :
-		MGameLoop() 
-		{
-			_isGameRunning = false;
-		}
+		MConsoleRenderer cRenderer;
+
+	public:
+		MGameLoop() { _isGameRunning = false; }
 		~MGameLoop() {}
 
 		void Run()
 		{
 			_isGameRunning = true;
-
-			initialize();
+			Initialize();
 
 			while (_isGameRunning)
 			{
@@ -31,7 +28,6 @@ namespace MuSeoun_Engine
 				Update();
 				Render();
 			}
-				 
 			Release();
 		}
 		void Stop()
@@ -39,78 +35,64 @@ namespace MuSeoun_Engine
 			_isGameRunning = false;
 		}
 
-	private :
-
-		int playerCoordX, playerCoordY;
-		bool isKeyPressed;
-
-		void initialize()
+	private:
+		void Initialize()
 		{
-			playerCoordX = 0;
-			playerCoordY = 0;
 
-			isKeyPressed = false;
-
-			SetCursorState(false);
 		}
-		
+		void Release()
+		{
+		}
+
 		void Input()
 		{
-			if(GetAsyncKeyState(VK_SPACE) == -0x8000 || GetAsyncKeyState(VK_SPACE) == -0x8001)			
-			{
+			/*	if (GetAsyncKeyState(VK_SPACE) & 0x8000 || GetAsyncKeyState(VK_SPACE) & 0x8001)
+				{
 
-			}
-			else
-			{
+				}
+				else
+				{
 
-			}
-			
-		
+				}*/
+
 		}
-		void Update(){}
+		void Update()
+		{
+
+		}
 		void Render()
 		{
 			chrono::system_clock::time_point startRenderTimePoint = chrono::system_clock::now();
-		
-			//system("cls");
-			cout << "Rendering...";
 
-			/* -if (isKeyPressed)
-			{
-				COORD playerPosition = { playerCoordX , playerCoordY };
-				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), playerPosition);
-				cout << "P";
-				isKeyPressed = false;
-			}*/
+			cRenderer.Clear();
+			cRenderer.MoveCursor(10, 20);
+
 
 			chrono::duration<double> renderDuration = chrono::system_clock::now() - startRenderTimePoint;
-			cout << "Rendering speed : " << renderDuration.count() << "sec" << endl;
 
-			int remainingFrameTime = 10 - (int)(renderDuration.count() * 1000.0);
+			string fps = "FPS(milliseconds) : " + to_string(renderDuration.count() * 6000.0f);
+			cRenderer.DrawString(fps);
 
-			if (remainingFrameTime > 0)
-				this_thread::sleep_for(chrono::milliseconds(remainingFrameTime));
-		
+
+
+
 		}
 
-		void Release(){}
 
-	private : //게임 사용 함수
+		////cout << "Rendering speed : " << renderDuration.count() << "sec" << endl;
 
-		void MoveCursor(short x, short y)
-		{
-			COORD position = { x , y };
-			SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), position);
-		}
+		//int remainingFrameTime = 100 - (int)(renderDuration.count() * 1000.0);
+		//if (remainingFrameTime > 0)
+			//this_thread::sleep_for(chrono::milliseconds(remainingFrameTime));
 
-		void SetCursorState(bool visible)
-		{
-			CONSOLE_CURSOR_INFO consoleCursorInfo;
-			consoleCursorInfo.bVisible = visible;
-			consoleCursorInfo.dwSize = 1;
-			SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &consoleCursorInfo);
-		}
+
 
 
 	};
+
+
+
+
+
+
 }
