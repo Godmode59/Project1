@@ -2,6 +2,8 @@
 #include <chrono>
 #include <thread>
 #include "MConsolUtil.hpp"
+#include "P.hpp"
+#include "Kill.hpp"
 
 using namespace std;
 
@@ -12,6 +14,10 @@ namespace MuSeoun_Engine
 	private:
 		bool _isGameRunning;
 		MConsoleRenderer cRenderer;
+		P player;
+		Kill killer;
+		chrono::system_clock::time_point startRenderTimePoint;
+		chrono::duration<double> renderDuration;
 
 	public:
 		MGameLoop() { _isGameRunning = false; }
@@ -38,6 +44,7 @@ namespace MuSeoun_Engine
 	private:
 		void Initialize()
 		{
+			
 
 		}
 		void Release()
@@ -46,14 +53,14 @@ namespace MuSeoun_Engine
 
 		void Input()
 		{
-			/*	if (GetAsyncKeyState(VK_SPACE) & 0x8000 || GetAsyncKeyState(VK_SPACE) & 0x8001)
+				if (GetAsyncKeyState(VK_SPACE) & 0x8000 || GetAsyncKeyState(VK_SPACE) & 0x8001)
 				{
-
+					player.getKeyDowned();
 				}
 				else
 				{
-
-				}*/
+					player.getKeyUped();
+				}
 
 		}
 		void Update()
@@ -62,20 +69,52 @@ namespace MuSeoun_Engine
 		}
 		void Render()
 		{
-			chrono::system_clock::time_point startRenderTimePoint = chrono::system_clock::now();
-
 			cRenderer.Clear();
+			killer.killed = false;
+			
+			
+			cRenderer.MoveCursor(player.x, player.y);
+			cRenderer.DrawString("¡à");
+
+			cRenderer.MoveCursor(killer.x, killer.y);
+			cRenderer.DrawString("¡â");
+
+			killer.killmove();
+			if (killer.x == player.x)
+			{
+				if (killer.y == player.y)
+				{
+					killer.killed = true;
+				}
+			}
+			if (killer.x <= 0)
+			{
+				killer.x = 45;
+				killer.killed = false;
+			}
+			if (killer.killed) 
+			{
+				cRenderer.Clear();
+				cRenderer.DrawString("SuperHotSuperHotSuperHotSuperHotSuperHotSuperHot");
+				while (killer.killed)
+				{
+					if (GetAsyncKeyState(VK_RETURN) & 0x8000 || GetAsyncKeyState(VK_RETURN) & 0x8001)
+					{
+						killer.killed = false;
+					}
+				}
+				killer.x = 45; killer.y = 10;
+			}
+
 			cRenderer.MoveCursor(10, 20);
 
 
-			chrono::duration<double> renderDuration = chrono::system_clock::now() - startRenderTimePoint;
-
-			string fps = "FPS(milliseconds) : " + to_string(renderDuration.count() * 6000.0f);
+			renderDuration = chrono::system_clock::now() - startRenderTimePoint;
+			startRenderTimePoint = chrono::system_clock::now();
+			string fps = "FPS : " + to_string(1.0 / renderDuration.count());
 			cRenderer.DrawString(fps);
 
-
-
-
+			this_thread::sleep_for(chrono::milliseconds(20));
 		}
 
 
