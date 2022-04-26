@@ -101,6 +101,7 @@ namespace MuSeoun_Engine
 					if (GetAsyncKeyState(VK_RETURN) & 0x8000 || GetAsyncKeyState(VK_RETURN) & 0x8001)
 					{
 						killer.killed = false;
+						break;
 					}
 				}
 				killer.x = 45; killer.y = 10;
