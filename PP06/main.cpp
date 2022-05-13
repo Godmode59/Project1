@@ -38,23 +38,33 @@ int main(void)
         ratio = width / (float)height;
 
 
-        glClearColor(0.8117f, 1.f, 0.898f, 0);
+        glClearColor(1.f, 1.f, 1.f, 0);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        glColor3f(0.81, 1, 0.89);
+
         glBegin(GL_TRIANGLES);
-        //GL_POINT점을 그리겠다
-        glColor3f(1.0f, 1.0f, 1.0f);
-        glVertex2f(0.55f, 0.1f);
-        glVertex2f(0.6f, -0.1f);
-        glVertex2f(0.5f, -0.1f);
-
-
-
-
-        glRectf(-0.5, 0.5, 0.5, -0.5);//???
-
+        glVertex2f(-0.75, -0.6);
+        glVertex2f(-0.9, -0.9);
+        glVertex2f(-0.6, -0.9);
+        glColor3f(1, 0, 0);
+        glBegin(GL_TRIANGLES);
+        glVertex2f(0.9, -0.6);
+        glVertex2f(0.9, -0.9);
+        glVertex2f(0.6, -0.9);
+        glBegin(GL_TRIANGLES);
+        glVertex2f(0.6, -0.6);
+        glVertex2f(0.9, -0.6);
+        glVertex2f(0.6, -0.9);
         glEnd();
-        glFlush();
+
+        glLoadIdentity();
+
+        glRotatef(45, 0, 0, 1);
+
+        glTranslatef(0.7, 0.7, 0);
+
+        glScalef(2, 2, 2);
 
 
         glfwSwapBuffers(window);
